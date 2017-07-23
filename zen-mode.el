@@ -1,4 +1,4 @@
-;;; zen-mode.el --- Zen Editing Mode for emacs
+;;; zen-mode.el --- Zen Editing Mode
 
 ;; Copyright (C) 2017 Akilan Elango
 
@@ -7,6 +7,7 @@
 ;; X-URL: https://github.com/aki237/zen-mode
 ;; URL: https://github.com/aki237/zen-mode
 ;; Version: 0.0.1
+;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -38,7 +39,7 @@
 
 
 ;; variables
-(defvar zen-mode:disable-mode-line t
+(defvar zen-mode-disable-mode-line t
   "Zen mode option to hide the mode line.  Set true to hide the mode line in Zen-mode.")
 
 ;; local variables
@@ -46,7 +47,7 @@
   "zen-run-mode variable is to set state of whether zen mode is enabled in the current buffer"
   )
 
-(defvar-local zen-mode:margin-width (/ (/ (display-pixel-width) (/ (window-pixel-width) (window-width))) 5)
+(defvar-local zen-mode-margin-width (/ (/ (display-pixel-width) (/ (window-pixel-width) (window-width))) 5)
   "Zen mode option to specify the margin width."
   )
 
@@ -96,8 +97,8 @@
   "zen-mode is a distraction free editing mode for Emacs"
   :lighter " Zen"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "C-c C-<") 'zen-mode:increase-margin-width)
-            (define-key map (kbd "C-c C->") 'zen-mode:decrease-margin-width)
+            (define-key map (kbd "C-c C-<") 'zen-mode-increase-margin-width)
+            (define-key map (kbd "C-c C->") 'zen-mode-decrease-margin-width)
             map)
   (zen-run)
   )
@@ -108,14 +109,14 @@
   (if zen-run-mode
       (progn
         (message "Distraction free disabled")
-        (setq window-size-change-functions (remove 'zen-mode:refresh-buffer 'window-size-change-functions))
+        (setq window-size-change-functions (remove 'zen-mode-refresh-buffer 'window-size-change-functions))
 	(if zen-linum-state
 	    (linum-mode 1))
 	
 	(if zen-blink-cursor-state
           (blink-cursor-mode 1))
 
-	(if zen-mode:disable-mode-line
+	(if zen-mode-disable-mode-line
           (progn
             (setq mode-line-format zen-mode-line-cache)))
 
@@ -132,7 +133,7 @@
         (set-window-buffer nil (current-buffer))
         (setq zen-run-mode nil))
     (progn
-      (if zen-mode:disable-mode-line
+      (if zen-mode-disable-mode-line
           (progn
             (setq zen-mode-line-cache mode-line-format)
             (setq mode-line-format nil)))
@@ -156,7 +157,7 @@
       (setq zen-fullscreen-state (frame-parameter (selected-frame) 'fullscreen))
       
       (message "Distraction free enabled")
-      (add-to-list 'window-size-change-functions 'zen-mode:refresh-buffer)
+      (add-to-list 'window-size-change-functions 'zen-mode-refresh-buffer)
       (set-frame-parameter nil 'fullscreen 'fullboth)
       (linum-mode -1)
       (setq right-fringe-width 0)
@@ -164,34 +165,34 @@
       (menu-bar-mode -1)
       (tool-bar-mode -1)
       (blink-cursor-mode -1)
-      (zen-mode:set-margins)
+      (zen-mode-set-margins)
       (setq zen-run-mode t))))
 
-(defun zen-mode:increase-margin-width()
-  "zen-mode:increase-margin-width is a interactive lisp function to increase the margin width in zen-mode (by 5 units)."
+(defun zen-mode-increase-margin-width()
+  "zen-mode-increase-margin-width is a interactive lisp function to increase the margin width in zen-mode (by 5 units)."
   (interactive)
-  (setq zen-mode:margin-width (+ zen-mode:margin-width 5))
-  (zen-mode:set-margins)
+  (setq zen-mode-margin-width (+ zen-mode-margin-width 5))
+  (zen-mode-set-margins)
   )
 
-(defun zen-mode:decrease-margin-width()
-  "zen-mode:increase-margin-width is a interactive lisp function to increase the margin width in zen-mode (by 5 units)."
+(defun zen-mode-decrease-margin-width()
+  "zen-mode-increase-margin-width is a interactive lisp function to increase the margin width in zen-mode (by 5 units)."
   (interactive)
-  (setq zen-mode:margin-width (+ zen-mode:margin-width -5))
-  (zen-mode:set-margins)
+  (setq zen-mode-margin-width (+ zen-mode-margin-width -5))
+  (zen-mode-set-margins)
   )
 
-(defun zen-mode:set-margins()
-  "zen-mode:set-margins is a lisp function to set the margin width (both left and right)."
-  (setq left-margin-width zen-mode:margin-width)
-  (setq right-margin-width zen-mode:margin-width)
+(defun zen-mode-set-margins()
+  "zen-mode-set-margins is a lisp function to set the margin width (both left and right)."
+  (setq left-margin-width zen-mode-margin-width)
+  (setq right-margin-width zen-mode-margin-width)
   (set-window-buffer nil (current-buffer))
   )
 
-(defun zen-mode:refresh-buffer(frame)
-  "zen-mode:refresh-buffer is a lisp function to refresh the buffer's margin width when window is resized"
-  (setq zen-mode:margin-width (/ (/ (display-pixel-width) (/ (window-pixel-width) (window-width))) 5))
-  (zen-mode:set-margins)
+(defun zen-mode-refresh-buffer(frame)
+  "zen-mode-refresh-buffer is a lisp function to refresh the buffer's margin width when window is resized"
+  (setq zen-mode-margin-width (/ (/ (display-pixel-width) (/ (window-pixel-width) (window-width))) 5))
+  (zen-mode-set-margins)
   )
 
 (provide 'zen-mode)
