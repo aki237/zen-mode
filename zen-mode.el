@@ -109,7 +109,7 @@
   (if zen-run-mode
       (progn
         (message "Distraction free disabled")
-        (setq window-size-change-functions (remove 'zen-mode-refresh-buffer 'window-size-change-functions))
+        (setq window-size-change-functions (remove 'zen-mode-refresh-buffer window-size-change-functions))
 	(if zen-linum-state
 	    (linum-mode 1))
 	
